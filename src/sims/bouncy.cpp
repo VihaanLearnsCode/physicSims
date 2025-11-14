@@ -35,7 +35,7 @@ int runBouncyBall() {
         sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}),
         "Inelastic Bouncy Balls"
     );
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(80);
 
     const float restitution_ball = 0.8f; // inelastic (1.0 = elastic)
     const float restitution_wall = 0.8f;
@@ -44,25 +44,33 @@ int runBouncyBall() {
 
     auto makeBall = [&](sf::Vector2f pos, sf::Vector2f vel, sf::Color col) {
         Ball b;
-        int r = rand() % (8 - 2 + 1) + 2;
+        int r = rand() % (3 - 1 + 1) + 1;
         b.radius = r * 10.f;
         b.shape = sf::CircleShape(b.radius);
         b.shape.setFillColor(col);
         b.shape.setPosition(pos);
         r = rand() % 10 + 1;
         int sign = (rand() % 2 == 0) ? 1 : -1;
-        b.velocity = sign * r * vel;
+        b.velocity = sign * r * vel * 10;
         balls.push_back(b);
     };
 
-    makeBall({100,100}, {200,150}, sf::Color::Red);
-    makeBall({250,200}, {-180,170}, sf::Color::Green);
-    makeBall({500,250}, {220,-160}, sf::Color::Blue);
-    makeBall({200,400}, {-150,-220}, sf::Color::Yellow);
-    makeBall({200,300}, {200,150}, sf::Color::Cyan);
-    makeBall({250,200}, {-180,170}, sf::Color::Magenta);
-    makeBall({500,250}, {220,-160}, sf::Color::White);
-    makeBall({200,400}, {-150,-220}, sf::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256,128));
+    
+    int n = rand() % 20 + 10; // 10 to 30 balls
+    int radius = 20;
+
+    for(int i = 0; i < n; i++) {
+        int rand_x  = rand() % (WINDOW_WIDTH  - 2*radius) + radius;
+        int rand_y  = rand() % (WINDOW_HEIGHT - 2*radius) + radius;
+
+        int rand_vx = (rand() % 200 + 100) * (rand() % 2 ? 1 : -1);
+        int rand_vy = (rand() % 200 + 100) * (rand() % 2 ? 1 : -1);
+        makeBall(sf::Vector2f(static_cast<float>(rand_x),  static_cast<float>(rand_y)),
+                sf::Vector2f(static_cast<float>(rand_vx), static_cast<float>(rand_vy)),
+                sf::Color(std::rand() % 128 + 128, std::rand() % 128 + 128, std::rand() % 128 + 128, 255)
+        );
+    }
+
 
     sf::Clock clock;
 
