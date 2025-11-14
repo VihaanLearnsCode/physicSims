@@ -5,3 +5,4 @@ Use "make && make run" in the terminal to see some cool things!
 
 Currently have:
 - Inelastic simulator with many balls
+![InelastiCollisions](gifs/inelastiCollisions.gif)
