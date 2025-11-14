@@ -1,6 +1,11 @@
 #include <iostream>
+
 using namespace std;
 
-int main(){
-    cout << "Physics Simulations" << endl;
+void runBouncyBall();
+
+int main() {
+    cout << "Running Bouncy Ball" << endl;
+    runBouncyBall();
+    return 0;
 }
