@@ -2,7 +2,7 @@
 CXX = g++
 CXXFLAGS = -I/opt/homebrew/include -std=c++17
 
-LDFLAGS = -L/opt/homebrew/lib -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -L/opt/homebrew/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 TARGET = physicSims
 

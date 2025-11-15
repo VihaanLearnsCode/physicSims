@@ -2,6 +2,8 @@
 #include <optional>
 #include <vector>
 #include <cmath>
+#include "math_helpers.cpp"
+
 using namespace std;
 
 struct Ball {
@@ -9,23 +11,6 @@ struct Ball {
     sf::Vector2f velocity;
     float radius;
 };
-
-sf::Vector2f operator*(const sf::Vector2f& v, float s) {
-    return { v.x * s, v.y * s };
-}
-
-sf::Vector2f operator*(float s, const sf::Vector2f& v) {
-    return { v.x * s, v.y * s };
-}
-
-// helpers
-float dot(const sf::Vector2f& a, const sf::Vector2f& b) {
-    return a.x * b.x + a.y * b.y;
-}
-
-float length(const sf::Vector2f& v) {
-    return std::sqrt(v.x*v.x + v.y*v.y);
-}
 
 int runBouncyBall() {
     const unsigned int WINDOW_WIDTH  = 800;
@@ -56,7 +41,7 @@ int runBouncyBall() {
     };
 
     
-    int n = rand() % 20 + 10; // 10 to 30 balls
+    int n = rand() % 20 + 10; 
     int radius = 20;
 
     for(int i = 0; i < n; i++) {

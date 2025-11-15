@@ -2,10 +2,10 @@
 
 using namespace std;
 
-void runBouncyBall();
+void runBouncyBubble();
 
 int main() {
     cout << "Running Bouncy Ball" << endl;
-    runBouncyBall();
+    runBouncyBubble();
     return 0;
 }
