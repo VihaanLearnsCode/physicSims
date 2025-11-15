@@ -13,8 +13,9 @@ struct Ball {
 };
 
 int runBouncyBall() {
-    const unsigned int WINDOW_WIDTH  = 800;
-    const unsigned int WINDOW_HEIGHT = 600;
+    float sc = 1;
+    const unsigned int WINDOW_WIDTH  = 800 * sc;
+    const unsigned int WINDOW_HEIGHT = 600 * sc;
 
     sf::RenderWindow window(
         sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}),
@@ -41,7 +42,7 @@ int runBouncyBall() {
     };
 
     
-    int n = rand() % 20 + 10; 
+    int n = rand() % 80 + 20; 
     int radius = 20;
 
     for(int i = 0; i < n; i++) {

@@ -75,23 +75,32 @@ struct Bubble {
         shine.setPosition(shineCenter - sf::Vector2f(shineR, shineR));
     }
 };
-
-
-int runBouncyBubble() {
+int runBouncyBubble(bool shader) {
     // ---------- Shader ----------
     sf::Shader bubbleShader;
-    if (!bubbleShader.loadFromFile("assets(shaders_failing_right_now_dont_try)/bubble.frag", sf::Shader::Type::Fragment)) {
-        std::cerr << "Failed to load fragment shader\n";
+    bool useShader = false;
+
+    if (!shader) {
+        std::cout << "Shaders Turned Off" << std::endl;
+    } else {
+        if (!bubbleShader.loadFromFile("assets/bubble.frag", sf::Shader::Type::Fragment)) {
+            std::cerr << "Failed to load fragment shader\n";
+        } else {
+            useShader = true;
+        }
     }
 
-    const unsigned int WINDOW_WIDTH  = 800;
-    const unsigned int WINDOW_HEIGHT = 600;
+    float sc = 1.2f;
+    const unsigned int WINDOW_WIDTH  = static_cast<unsigned int>(1200 * sc);
+    const unsigned int WINDOW_HEIGHT = static_cast<unsigned int>(900  * sc);
+    const float WINDOW_WIDTH_F  = static_cast<float>(WINDOW_WIDTH);
+    const float WINDOW_HEIGHT_F = static_cast<float>(WINDOW_HEIGHT);
 
     sf::RenderWindow window(
         sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}),
         "Inelastic Bouncy Bubbles"
     );
-    window.setFramerateLimit(80);
+    window.setFramerateLimit(100);
 
     const float restitution_ball = 0.8f;
     const float restitution_wall = 0.8f;
@@ -194,7 +203,7 @@ int runBouncyBubble() {
     }
 
     sf::Clock clock;
-    float elapsedTime = 0.f;  // <- for shader animation
+    float elapsedTime = 0.f;
 
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -400,21 +409,35 @@ int runBouncyBubble() {
             b.updateShine(window.getSize());
         }
 
-        window.clear(sf::Color(180, 220, 255));
+            window.clear(sf::Color(180, 220, 255));
+            // window.clear(sf::Color::White);
 
         for (auto& b : bubbles) {
-            // bubble center in screen coords
-            sf::Vector2f center = b.main.getPosition() + sf::Vector2f(b.radius, b.radius);
-            sf::Color col = b.main.getFillColor();
+            if (useShader) {
+                sf::Vector2f center = b.main.getPosition() + sf::Vector2f(b.radius, b.radius);
+                sf::Color col = b.main.getFillColor();
 
-            bubbleShader.setUniform("u_radius", b.radius);
-            bubbleShader.setUniform("u_center", center);
-            bubbleShader.setUniform("u_color", sf::Glsl::Vec4(col)); // SFML will convert
-            bubbleShader.setUniform("u_time", elapsedTime);
+                bubbleShader.setUniform("u_radius", b.radius);
+                bubbleShader.setUniform("u_center", center);  // window coords
+                bubbleShader.setUniform(
+                    "u_color",
+                    sf::Glsl::Vec4(
+                        col.r / 255.f,
+                        col.g / 255.f,
+                        col.b / 255.f,
+                        col.a / 255.f
+                    )
+                );
+                bubbleShader.setUniform("u_time", elapsedTime);
 
-            window.draw(b.main, &bubbleShader);   // draw main body with shader
-            window.draw(b.shine);                 // keep the little highlight on top
+                window.draw(b.main, &bubbleShader);   // shaded body
+            } else {
+                window.draw(b.main);                  // plain body
+            }
+
+            window.draw(b.shine);                     // highlight on top
         }
+
 
         // pop rings on top
         for (auto& r : popRings) {
